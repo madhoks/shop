@@ -19,19 +19,18 @@ public class Product {
 	String productName;
 	String productDesc;
 	
-	@OneToMany(mappedBy="Product", cascade=CascadeType.ALL)
-	private List<Order> orders;
+	@OneToMany(mappedBy="product")
+	private List<Orders> orders;
 
 	public Product() {
 		super();
 	}
 
-	public Product(long pid, String productName, String productDesc, List<Order> orders) {
+	public Product(long pid, String productName, String productDesc) {
 		super();
 		this.pid = pid;
 		this.productName = productName;
 		this.productDesc = productDesc;
-		this.orders = orders;
 	}
 
 	public long getPid() {
@@ -58,12 +57,16 @@ public class Product {
 		this.productDesc = productDesc;
 	}
 
-	public List<Order> getOrders() {
+	public List<Orders> getOrders() {
 		return orders;
 	}
 
-	public void setOrders(List<Order> orders) {
+	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
+	}
+	
+	public int hashCode() {
+		return Long.hashCode(pid);
 	}
 	
 	

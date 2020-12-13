@@ -5,31 +5,37 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-@Entity
-public class Order {
-	@Id
-@GeneratedValue(strategy=GenerationType.AUTO)
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-private long orderId;
-	
-	@OneToOne(cascade=CascadeType.ALL)
+@Entity
+public class Orders {
+	// This should not be there, or we need to move to a separate table.
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+
+	private long orderId;
+
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "userId")
 	private User user;
-	
-	@ManyToOne(cascade=CascadeType.ALL)
+
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "productId")
 	private Product product;
 
-	public Order() {
+	public Orders() {
 		super();
 	}
 
-	public Order(long orderId, User user, Product product) {
+	public Orders(long orderId) {
 		super();
 		this.orderId = orderId;
-		this.user = user;
-		this.product = product;
 	}
 
 	public long getOrderId() {
@@ -55,8 +61,9 @@ private long orderId;
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	
-	
+
+	public int hashCode() {
+		return Long.hashCode(orderId);
+	}
+
 }
-
-

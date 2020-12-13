@@ -7,33 +7,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class User {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String userName;
 	private String password;
 	private int age;
-	
-	@OneToOne(cascade=CascadeType.ALL)
+
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private UserAccount userAccount;
-	
-	@OneToOne(mappedBy="User",cascade=CascadeType.ALL)
-	private Order order;
+
+	@JsonIgnore
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+	private Orders order;
 
 	public User() {
 		super();
 	}
 
-	public User(long id, String userName, String password, int age, UserAccount userAccount, Order order) {
+	public User(long id, String userName, String password, int age) {
+
 		super();
 		this.id = id;
 		this.userName = userName;
 		this.password = password;
 		this.age = age;
-		this.userAccount = userAccount;
-		this.order = order;
 	}
 
 	public long getId() {
@@ -76,13 +78,16 @@ public class User {
 		this.userAccount = userAccount;
 	}
 
-	public Order getOrder() {
+	public Orders getOrder() {
 		return order;
 	}
 
-	public void setOrder(Order order) {
-		this.order= order;
+	public void setOrder(Orders order) {
+		this.order = order;
 	}
 
-	
+	public int hashcode() {
+		return Long.hashCode(id);
+	}
+
 }

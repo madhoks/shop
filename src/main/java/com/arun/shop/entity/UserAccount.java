@@ -5,31 +5,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class UserAccount {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	long aid;
-	
+
 	long accountNumber;
 	long balance;
-	
-	@OneToOne(mappedBy="userAccount",cascade={CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH})
-private User user;
+
+	@JsonIgnore
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="userId")
+	private User user;
 
 	public UserAccount() {
-		super();
 	}
 
-	public UserAccount(long aid, long accountNumber, long balance, User user) {
-		super();
+	public UserAccount(long aid, long accountNumber, long balance) {
 		this.aid = aid;
 		this.accountNumber = accountNumber;
 		this.balance = balance;
-		this.user = user;
 	}
 
 	public long getAid() {
@@ -64,7 +65,8 @@ private User user;
 		this.user = user;
 	}
 	
-	
-
-
+	public int hashCode() {
+		return Long.hashCode(aid);
 	}
+
+}
