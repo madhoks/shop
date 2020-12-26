@@ -1,11 +1,12 @@
 package com.arun.shop.entity;
 import java.util.List;
-import javax.persistence.CascadeType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 //import com.sun.tools.javac.util.List;
 
@@ -18,6 +19,7 @@ public class Product {
 	
 	String productName;
 	String productDesc;
+	String image;
 	
 	@OneToMany(mappedBy="product")
 	private List<Orders> orders;
@@ -26,11 +28,13 @@ public class Product {
 		super();
 	}
 
-	public Product(long pid, String productName, String productDesc) {
+	public Product(long pid, String productName, String productDesc, String image, List<Orders> orders) {
 		super();
 		this.pid = pid;
 		this.productName = productName;
 		this.productDesc = productDesc;
+		this.image = image;
+		this.orders = orders;
 	}
 
 	public long getPid() {
@@ -56,6 +60,15 @@ public class Product {
 	public void setProductDesc(String productDesc) {
 		this.productDesc = productDesc;
 	}
+	@Transient
+	public String getImage() {
+		//if (image == null || pid == null) return null;
+		return "/user-photos/" + pid + "/" + image;
+		}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public List<Orders> getOrders() {
 		return orders;
@@ -64,11 +77,5 @@ public class Product {
 	public void setOrders(List<Orders> orders) {
 		this.orders = orders;
 	}
-	
-	public int hashCode() {
-		return Long.hashCode(pid);
-	}
-	
-	
-	
+
 	}
