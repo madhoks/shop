@@ -1,4 +1,9 @@
 package com.arun.shop.entity;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,20 +13,22 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.springframework.util.StreamUtils;
+
 //import com.sun.tools.javac.util.List;
 
 @Entity
 public class Product {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	long pid;
-	
+
 	String productName;
 	String productDesc;
 	String image;
-	
-	@OneToMany(mappedBy="product")
+
+	@OneToMany(mappedBy = "product")
 	private List<Orders> orders;
 
 	public Product() {
@@ -60,11 +67,15 @@ public class Product {
 	public void setProductDesc(String productDesc) {
 		this.productDesc = productDesc;
 	}
+
 	@Transient
-	public String getImage() {
-		//if (image == null || pid == null) return null;
-		return "/user-photos/" + pid + "/" + image;
-		}
+	public String getImage() throws IOException {
+		//Updated method for approach 1. This will convert the image to Base64 in the get method.
+		InputStream in = getClass().getResourceAsStream("/user-photos/2/laptop.jpg");
+		System.out.println("Product Entity Geting the image for " + (null == in ? "is null" : "is not nulll"));
+		byte[] encodedByteArray = StreamUtils.copyToByteArray(in);
+		return new String(Base64.getEncoder().encodeToString(encodedByteArray));
+	}
 
 	public void setImage(String image) {
 		this.image = image;
@@ -78,4 +89,4 @@ public class Product {
 		this.orders = orders;
 	}
 
-	}
+}
